@@ -13,6 +13,7 @@ async function sendSticker(message, client) {
   if (message.channel.type !== 'text') return;
   // 提取命令
   const command = message.content.toLowerCase().replace(/(:|;)/g, '');
+  // 提取名称
   const authorName = message.member && message.member.nickname ? message.member.nickname : message.author.username;
   // 获取 webhook
   async function getStickerWebhook(channel) {
@@ -69,7 +70,7 @@ async function sendSticker(message, client) {
       handleSendStickerError(err);
     }
   }
-
+  // 异常处理把手
   function handleSendStickerError(err) {
     if (err.statusCode) err.status = err.statusCode;
     if (err.status === 404) return;
@@ -87,16 +88,24 @@ async function sendSticker(message, client) {
 		`.replace(/\t+/g, ''));
   }
 
+  // 忽略空命令
+  if (!command.length) return;
+  console.log(`Command: ${command}`);
+
   const guild = message.guild;
-  const stickerName = encodeURIComponent(command);
+  let stickerPack, stickerName, uri;
 
-  if (!stickerName.length) return;
+  // sticker pack
+  if (command.includes('-')) {
+    stickerPack = command.split('-')[0];
+    stickerName = command.split('-')[1];
+    uri = `${process.env.APP_URL}/api/sticker-packs/${stickerPack}/stickers/${stickerName}`
+  // sticker only
+  } else {
+    uri = `${process.env.APP_URL}/api/guilds/${guild.id}/stickers/${stickerName}`
+  }
 
-  rp({
-    method: 'GET',
-    uri: `${process.env.APP_URL}/api/guilds/${guild.id}/stickers/${stickerName}`,
-    json: true
-  })
+  rp({ method: 'GET', uri, json: true })
   .then(useSticker)
   .catch(handleSendStickerError);
 }
