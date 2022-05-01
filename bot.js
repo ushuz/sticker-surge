@@ -89,8 +89,8 @@ async function sendSticker(message, client) {
   }
 
   // 忽略空命令
-  if (!command.length) return;
   console.log(`Command: ${command}`);
+  if (!command.length) return;
 
   const guild = message.guild;
   let stickerPack, stickerName, uri;
@@ -102,6 +102,7 @@ async function sendSticker(message, client) {
     uri = `${process.env.APP_URL}/api/sticker-packs/${stickerPack}/stickers/${stickerName}`
   // sticker only
   } else {
+    stickerName = command;
     uri = `${process.env.APP_URL}/api/guilds/${guild.id}/stickers/${stickerName}`
   }
 
