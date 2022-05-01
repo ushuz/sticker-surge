@@ -12,7 +12,7 @@ async function sendSticker(message, client) {
   // 只处理 guild 消息
   if (message.channel.type !== 'text') return;
   // 提取命令
-  const command = message.content.toLowerCase().replace(/(:|;)/g, '');
+  const command = message.content.trim().toLowerCase().replace(/(:|;)/g, '');
   // 提取名称
   const authorName = message.member && message.member.nickname ? message.member.nickname : message.author.username;
   // 获取 webhook
@@ -115,7 +115,7 @@ async function sendSticker(message, client) {
 
 // on sticker message
 
-const P_STICKER = /^((:|;)[a-zA-Zа-яёА-ЯЁ0-9-]+(:|;))$/g;
+const P_STICKER = /^((:|;)[a-zA-Z0-9-]+(:|;))$/;
 
 function onStickerMessage(message) {
   if(message.author.bot) return false;
