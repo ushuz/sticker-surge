@@ -1,4 +1,4 @@
-# Sticker Surge
+# Sticker Bot
 
 Based on: https://github.com/DarylPinto/sticker-surge
 
